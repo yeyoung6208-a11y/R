@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>제1회 은행 미술 작품 경매 진행 도구</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&display=swap">
+<style>
+:root{--bg:#f4efe1;--card:#fffdf6;--ink:#1d1d1b;--mute:#6b665a;--y:#fdd76b;--yi:#1d1d1b;--o:#e8480f;--g:#0b5d45;--gi:#fff;--sg:#9ab087;--line:#d9d2bd;--warn:#fff0c2;--bad:#f3dcd4;--ok:#dcead2;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1b1a16;--card:#262420;--ink:#f3efe2;--mute:#a8a291;--y:#e6bf4f;--yi:#1b1a16;--o:#ff7a4d;--g:#5fc9a0;--gi:#12261f;--sg:#6f8560;--line:#3d3a31;--warn:#4a4020;--bad:#4a2a20;--ok:#26402a}}
+:root[data-theme="dark"]{--bg:#1b1a16;--card:#262420;--ink:#f3efe2;--mute:#a8a291;--y:#e6bf4f;--yi:#1b1a16;--o:#ff7a4d;--g:#5fc9a0;--gi:#12261f;--sg:#6f8560;--line:#3d3a31;--warn:#4a4020;--bad:#4a2a20;--ok:#26402a}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",sans-serif;line-height:1.55}
+.wrap{max-width:960px;margin:0 auto;padding:16px}
+h1,h2,h3{font-family:"Black Han Sans","Apple SD Gothic Neo","Malgun Gothic",sans-serif;font-weight:400;margin:0 0 8px;line-height:1.2}
+header h1{font-size:28px}
+header p{margin:0;color:var(--mute)}
+.tabs{display:flex;gap:8px;margin:16px 0;flex-wrap:wrap}
+.tab{flex:1 1 120px;padding:12px 10px;border:2px solid var(--ink);background:var(--card);color:var(--ink);border-radius:999px;font:inherit;font-weight:700;cursor:pointer}
+.tab.on{background:var(--g);color:var(--gi);border-color:var(--g)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:12px}
+.card h2{font-size:22px}.card h3{font-size:19px}
+.sub{background:transparent;border-style:dashed}
+.m{color:var(--mute)}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+.row input{flex:1 1 150px}
+input,textarea{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px;width:100%}
+textarea{margin-bottom:8px;resize:vertical}
+:focus-visible{outline:3px solid var(--o);outline-offset:2px}
+.btn{font:inherit;font-weight:700;padding:10px 16px;border-radius:10px;border:2px solid var(--g);background:var(--g);color:var(--gi);cursor:pointer}
+.btn.ghost{background:transparent;color:var(--ink);border-color:var(--line)}
+.x{font:inherit;border:0;background:transparent;color:var(--o);cursor:pointer;margin-left:auto;text-decoration:underline}
+.list{list-style:none;margin:12px 0 0;padding:0}
+.list li{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap;padding:8px 0;border-top:1px solid var(--line)}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{background:var(--y);color:var(--yi);border-radius:999px;padding:4px 6px 4px 14px;font-weight:700}
+.chip button{border:0;background:transparent;color:inherit;font-size:18px;cursor:pointer;padding:0 8px}
+.pills{display:flex;gap:8px;flex-wrap:wrap}
+.pill{font:inherit;font-weight:700;padding:8px 14px;border-radius:999px;border:2px solid var(--ink);background:var(--card);color:var(--ink);cursor:pointer}
+.pill.on{background:var(--y);color:var(--yi)}
+.stage{background:var(--y);color:var(--yi);border:0;padding:32px 24px;border-radius:24px}
+.stage h1{font-size:clamp(34px,7vw,64px);margin:8px 0}
+.stage .m{color:var(--yi);opacity:.75;margin:0}
+.price{display:inline-block;background:var(--g);color:var(--gi);font-weight:700;padding:6px 16px;border-radius:999px;margin:12px 0}
+.note{font-size:20px;white-space:pre-wrap;margin:8px 0 0}
+.timer{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.tm{font-family:"Black Han Sans",sans-serif;font-size:44px;min-width:120px}
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;width:100%;min-width:max-content}
+th,td{border:1px solid var(--line);padding:6px;text-align:center}
+th.l{text-align:left;min-width:150px}
+th small{display:block;font-weight:400;color:var(--mute)}
+.bid{width:96px;text-align:right}
+.stats{display:flex;gap:12px;flex-wrap:wrap}
+.stat{flex:1 1 120px;background:var(--bg);border-radius:12px;padding:12px}
+.stat b{display:block;font-family:"Black Han Sans",sans-serif;font-weight:400;font-size:28px}
+.st{display:inline-block;padding:6px 14px;border-radius:10px;font-weight:700;margin:4px 0}
+.st.ok{background:var(--ok)}.st.warn{background:var(--warn)}.st.bad{background:var(--bad)}
+.warn-t{margin:4px 0 0;color:var(--o);font-weight:700}
+@media (max-width:520px){.wrap{padding:12px}.stage{padding:24px 16px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+<h1>제1회 은행 미술 작품 경매 행사</h1>
+<p>출품작 등록부터 낙찰자 확정까지 한 화면에서 진행합니다.</p>
+</header>
+<nav class="tabs" id="tabs"></nav>
+<main id="main"></main>
+</div>
+<script>
+const KEY="auction-tool-v1";
+const TABS=["① 등록","② 작품 제시","③ 봉투 입찰","④ 낙찰 결과"];
+let S={arts:[],buyers:[],bids:{},wins:{},cur:null,tab:0};
+try{const raw=localStorage.getItem(KEY);if(raw)S=Object.assign(S,JSON.parse(raw));}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}};
+const $=s=>document.querySelector(s);
+const esc=t=>String(t).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const uid=()=>Math.random().toString(36).slice(2,8);
+const fmt=n=>(+n).toLocaleString("ko-KR",{maximumFractionDigits:2})+"억";
+const nm=id=>{const b=S.buyers.find(x=>x.id===id);return b?b.name:"-";};
+const empty=t=>'<section class="card sub"><p class="m">'+esc(t)+'</p></section>';
+let armed=false;
+const T={left:180,run:false,id:null};
+const tf=s=>String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0");
+
+function calc(a){
+  const b=S.bids[a.id]||{};
+  const ent=Object.entries(b).filter(([k,v])=>v>0&&S.buyers.some(x=>x.id===k));
+  if(!ent.length)return{state:"none"};
+  const max=Math.max(...ent.map(e=>e[1]));
+  const top=ent.filter(e=>e[1]===max).map(e=>e[0]);
+  const below=a.price>0&&max<a.price;
+  if(top.length===1)return{state:"won",max,winner:top[0],below};
+  const w=S.wins[a.id];
+  return{state:"tie",max,top,below,winner:w&&top.includes(w)?w:null};
+}
+
+function v0(){
+  const al=S.arts.map(a=>'<li><b>'+esc(a.title)+'</b><span class="m">출품자 '+esc(a.seller||"-")+' · 시작가 '+(a.price?fmt(a.price):"미정")+'</span><button class="x" onclick="delArt(\''+a.id+'\')">삭제</button></li>').join("")||'<li class="m">아직 출품작이 없습니다.</li>';
+  const bl=S.buyers.map(b=>'<span class="chip">'+esc(b.name)+'<button aria-label="삭제" onclick="delBuyer(\''+b.id+'\')">×</button></span>').join("")||'<span class="m">아직 구매자가 없습니다.</span>';
+  return '<section class="card"><h2>출품작 등록</h2><div class="row"><input id="f-t" placeholder="작품명"><input id="f-s" placeholder="출품자(학생·모둠)"><input id="f-p" type="number" step="0.1" min="0" inputmode="decimal" placeholder="희망 시작가(억 원)"></div><textarea id="f-n" rows="3" placeholder="출품자의 가치 설명(작품 제시 화면에 크게 표시됩니다)"></textarea><button class="btn" onclick="addArt()">출품작 추가</button><ul class="list">'+al+'</ul></section>'
+  +'<section class="card"><h2>구매자 등록</h2><div class="row"><input id="f-b" placeholder="구매자 이름(학생·모둠)" onkeydown="if(event.key===\'Enter\')addBuyer()"><button class="btn" onclick="addBuyer()">구매자 추가</button></div><div class="chips">'+bl+'</div></section>'
+  +'<section class="card sub"><button class="btn ghost" onclick="demo()">예시 데이터 불러오기</button> <button class="btn ghost" onclick="resetAll()">'+(armed?"정말 지울까요? 한 번 더 누르세요":"전체 초기화")+'</button></section>';
+}
+
+function v1(){
+  if(!S.arts.length)return empty("먼저 ① 등록에서 출품작을 추가하세요.");
+  const a=S.arts.find(x=>x.id===S.cur)||S.arts[0];
+  const btns=S.arts.map((x,i)=>'<button class="pill'+(x.id===a.id?" on":"")+'" onclick="pick(\''+x.id+'\')">'+(i+1)+'. '+esc(x.title)+'</button>').join("");
+  return '<section class="card"><div class="pills">'+btns+'</div></section>'
+  +'<section class="card stage"><p class="m">작품 제시 및 가치 환산</p><h1>'+esc(a.title)+'</h1><p class="m">출품자 '+esc(a.seller||"-")+'</p><div class="price">희망 시작가 '+(a.price?fmt(a.price):"미정")+'</div><p class="note">'+esc(a.note||"가치 설명이 아직 입력되지 않았습니다.")+'</p></section>'
+  +'<section class="card timer"><span id="tm" class="tm">'+tf(T.left)+'</span><button class="btn" onclick="tt()">'+(T.run?"일시정지":"시작")+'</button><button class="btn ghost" onclick="tr()">3분으로 되돌리기</button><span class="m">구매자는 설명을 들으며 구매 희망 작품과 책정 가격을 메모합니다.</span></section>';
+}
+
+function v2(){
+  if(!S.arts.length||!S.buyers.length)return empty("① 등록에서 출품작과 구매자를 먼저 추가하세요.");
+  const head=S.buyers.map(b=>'<th>'+esc(b.name)+'</th>').join("");
+  const rows=S.arts.map(a=>'<tr><th class="l">'+esc(a.title)+'<small>시작가 '+(a.price?fmt(a.price):"미정")+'</small></th>'+S.buyers.map(b=>{
+    const v=(S.bids[a.id]||{})[b.id];
+    return '<td><input class="bid" type="number" step="0.1" min="0" inputmode="decimal" aria-label="'+esc(b.name)+' → '+esc(a.title)+'" value="'+(v>0?v:"")+'" onchange="setBid(\''+a.id+'\',\''+b.id+'\',this.value)"></td>';
+  }).join("")+'</tr>').join("");
+  return '<section class="card"><h2>봉투 입찰 금액 입력</h2><p class="m">봉투에서 꺼낸 금액을 입력하세요(단위: 억 원). 빈칸은 입찰 없음입니다.</p><div class="scroll"><table><thead><tr><th></th>'+head+'</tr></thead><tbody>'+rows+'</tbody></table></div></section>';
+}
+
+function v3(){
+  if(!S.arts.length)return empty("출품작이 없습니다. ① 등록에서 추가하세요.");
+  let won=0,sum=0,none=0,pend=0;
+  const cards=S.arts.map(a=>{
+    const c=calc(a);let body="";
+    if(c.state==="none"){none++;body='<div class="st bad">유찰 · 입찰 없음</div>';}
+    else if(c.winner){won++;sum+=c.max;body='<div class="st ok">낙찰 '+fmt(c.max)+' · '+esc(nm(c.winner))+'</div>';
+      if(c.state==="tie")body+='<p class="m">동점이어서 구매 이유 설명을 듣고 출품자가 선정했습니다. <button class="x" onclick="win(\''+a.id+'\',\'\')">다시 선택</button></p>';}
+    else{pend++;body='<div class="st warn">최고가 동점 '+fmt(c.max)+'</div><p class="m">동점 구매자가 구매 이유를 설명하면, 출품자가 타당한 구매자를 선택합니다.</p><div class="pills">'+c.top.map(id=>'<button class="pill" onclick="win(\''+a.id+'\',\''+id+'\')">'+esc(nm(id))+'</button>').join("")+'</div>';}
+    const low=c.state!=="none"&&c.below?'<p class="warn-t">희망 시작가('+fmt(a.price)+')보다 낮은 입찰입니다.</p>':"";
+    return '<section class="card"><h3>'+esc(a.title)+' <small class="m">출품자 '+esc(a.seller||"-")+'</small></h3>'+body+low+'</section>';
+  }).join("");
+  const txt=S.arts.map(a=>{const c=calc(a);return a.title+"("+(a.seller||"-")+"): "+(c.state==="none"?"유찰":c.winner?nm(c.winner)+" "+fmt(c.max)+" 낙찰":"최고가 "+fmt(c.max)+" 동점, 선정 대기");}).join("\n");
+  return '<section class="card"><h2>경매 결과</h2><div class="stats"><div class="stat"><b>'+won+'</b>낙찰</div><div class="stat"><b>'+pend+'</b>선정 대기</div><div class="stat"><b>'+none+'</b>유찰</div><div class="stat"><b>'+fmt(sum)+'</b>낙찰 합계</div></div></section>'
+  +cards
+  +'<section class="card"><h2>결과 텍스트</h2><textarea id="out" rows="'+(S.arts.length+1)+'" readonly>'+esc(txt)+'</textarea><button class="btn" id="cpb" onclick="cp()">복사</button></section>';
+}
+
+function r(){
+  $("#tabs").innerHTML=TABS.map((t,i)=>'<button class="tab'+(i===S.tab?" on":"")+'" onclick="go('+i+')">'+t+'</button>').join("");
+  $("#main").innerHTML=[v0,v1,v2,v3][S.tab]();
+}
+function go(i){S.tab=i;armed=false;save();r();window.scrollTo(0,0);}
+function addArt(){
+  const t=$("#f-t").value.trim();if(!t){$("#f-t").focus();return;}
+  const p=parseFloat($("#f-p").value);
+  S.arts.push({id:uid(),title:t,seller:$("#f-s").value.trim(),price:isNaN(p)?0:p,note:$("#f-n").value.trim()});
+  save();r();$("#f-t").focus();
+}
+function delArt(id){S.arts=S.arts.filter(a=>a.id!==id);delete S.bids[id];delete S.wins[id];save();r();}
+function addBuyer(){
+  const n=$("#f-b").value.trim();if(!n){$("#f-b").focus();return;}
+  S.buyers.push({id:uid(),name:n});save();r();$("#f-b").focus();
+}
+function delBuyer(id){S.buyers=S.buyers.filter(b=>b.id!==id);save();r();}
+function pick(id){S.cur=id;save();r();}
+function setBid(a,b,v){
+  const n=parseFloat(v);S.bids[a]=S.bids[a]||{};
+  if(isNaN(n)||n<=0)delete S.bids[a][b];else S.bids[a][b]=n;
+  save();
+}
+function win(a,b){if(b)S.wins[a]=b;else delete S.wins[a];save();r();}
+function tt(){
+  T.run=!T.run;clearInterval(T.id);
+  if(T.run)T.id=setInterval(()=>{T.left=Math.max(0,T.left-1);const e=$("#tm");if(e)e.textContent=tf(T.left);if(!T.left){T.run=false;clearInterval(T.id);if(S.tab===1)r();}},1000);
+  r();
+}
+function tr(){clearInterval(T.id);T.run=false;T.left=180;r();}
+function cp(){
+  const t=$("#out");t.select();
+  try{navigator.clipboard.writeText(t.value).catch(()=>document.execCommand("copy"));}catch(e){try{document.execCommand("copy");}catch(_){}}
+  $("#cpb").textContent="복사했습니다";
+}
+function resetAll(){
+  if(!armed){armed=true;r();return;}
+  armed=false;S={arts:[],buyers:[],bids:{},wins:{},cur:null,tab:0};save();r();
+}
+function demo(){
+  S.arts=[
+    {id:"a1",title:"진주귀고리를 한 소녀",seller:"1모둠",price:3,note:"사회 맥락적 관점에서 시대의 분위기를 보여 주고, 빛과 색의 조화가 뛰어난 작품입니다."},
+    {id:"a2",title:"1808년 5월 3일",seller:"2모둠",price:2.5,note:"전쟁의 폭력과 인간의 고통을 고발하려는 작가의 의도가 담겨 있습니다."},
+    {id:"a3",title:"인상, 해돋이",seller:"3모둠",price:2,note:"특정 순간의 빛과 분위기를 표현해 전통적 미술 규범에 도전했습니다."}
+  ];
+  S.buyers=[{id:"b1",name:"4모둠"},{id:"b2",name:"5모둠"},{id:"b3",name:"6모둠"}];
+  S.bids={a1:{b1:3.5,b2:3.5,b3:2.5},a2:{b1:2},a3:{}};S.wins={};S.cur="a1";save();r();
+}
+r();
+</script>
+</body>
+</html>
